@@ -1,7 +1,6 @@
 let fs = require('fs'),
- xml2js = require('xml2js'),
- util = require('util'),
- commandLineArgs = require('command-line-args');
+xml2js = require('xml2js'),
+commandLineArgs = require('command-line-args');
 const { exec } = require('child_process');
 
 let parser = new xml2js.Parser(),
@@ -39,18 +38,26 @@ fs.readFile(options.config, function(err, data) {
 			
 			fs.writeFile(options.config, xml, () => {
 				console.log('config.xml Updated');
-				exec('cp '+options.splash+' resources/; cp '+options.icon+' resources/; ionic cordova resources --force --splash; ionic cordova resources --force --icon', (err, stdout, stderr) => {
-					if (err) {
-						// node couldn't execute the command
-						console.log(err);
-						return;
-					}
-					if(stdout) console.log(stdout);
-					console.log(stderr);
-				});
+				createResource(options);
 			});
 		} else {
 			console.log('Invalid config.xml file');
 		}
 	});
 });
+
+
+let createResource = (options) => {
+
+	exec('cp '+options.splash+' resources/; cp '+options.icon+' resources/; ionic cordova resources --force --splash; ionic cordova resources --force --icon', (err, stdout, stderr) => {
+		if (err) {
+			// node couldn't execute the command
+			console.log(err);
+			return;
+		}
+		if(stdout) console.log(stdout);
+		console.log(stderr);
+	});
+
+}
+
